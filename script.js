@@ -80,7 +80,6 @@
 
     // Define Mouse Click Event
     const clickEvent = new MouseEvent("click", {
-        "view": window,
         "bubbles": true,
         "cancelable": false
     });
