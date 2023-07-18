@@ -2,6 +2,7 @@
 This script allows you to unblur images on Quora  
 
 - Github Project: https://github.com/PikaTer/quora-unblur-images
+- Script Installation: https://greasyfork.org/en/scripts/471116
 
 ***
 

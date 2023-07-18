@@ -5,10 +5,10 @@
 // @description  Unblur quora images and other utilities
 // @author       PikaTer
 // @match        https://*.quora.com/*
-// @license
+// @license      MIT
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // Remove Image Blur
@@ -43,12 +43,12 @@
             }
         };
 
-        if( MutationObserver ){
+        if (MutationObserver) {
             const mutationObserver = new MutationObserver(callback);
 
-            mutationObserver.observe( targetNode, config);
+            mutationObserver.observe(targetNode, config);
         }
-        else if( window.addEventListener ){
+        else if (window.addEventListener) {
             targetNode.addEventListener('DOMNodeInserted', callback, false)
             targetNode.addEventListener('DOMNodeRemoved', callback, false)
         }
@@ -90,7 +90,7 @@
     getMainFeedNode();
 
     // Listener To Listen To Keypresses Events (Shortcuts to utilities)
-    document.addEventListener ("keydown", function (zEvent) {
+    document.addEventListener("keydown", function (zEvent) {
         // Expand Posts
         if (zEvent.ctrlKey && zEvent.altKey && zEvent.key === "e") {
             expandPosts();
@@ -99,5 +99,5 @@
         if (zEvent.ctrlKey && zEvent.altKey && zEvent.key === "b") {
             removeBlur();
         }
-    } );
+    });
 })();
