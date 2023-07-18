@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Quora Unblur Images
 // @namespace    quora-unblur-images
-// @version      0.2
+// @version      0.3
 // @description  Unblur quora images and other utilities
 // @author       PikaTer
 // @match        https://*.quora.com/*
