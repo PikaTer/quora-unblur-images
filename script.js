@@ -70,9 +70,12 @@
     // Get The Main Feed Node (Quora Spaces) To Add It Into Observer Watch
     function getMainFeedNode() {
         var target = document.querySelector('.dom_annotate_multifeed_tribe_top_items');
+        var target2 = document.querySelector('.dom_annotate_multifeed_tribe_page');
 
         if (target) {
             observeDOM(target);
+        } else if (target2) {
+            observeDOM(target2);
         } else {
             setTimeout(getMainFeedNode, 5000);
         }
