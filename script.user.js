@@ -1,23 +1,47 @@
 // ==UserScript==
 // @name         Quora Unblur Images
 // @namespace    quora-unblur-images
-// @version      0.4
+// @version      0.5.0
 // @description  Unblur quora images and other utilities
 // @author       PikaTer
 // @match        https://*.quora.com/*
+// @icon         https://raw.githubusercontent.com/PikaTer/quora-unblur-images/main/icon.ico
 // @license      MIT
+// @grant GM_setValue
+// @grant GM_getValue
+// @grant GM.setValue
+// @grant GM.getValue
 // ==/UserScript==
 
 (function () {
     'use strict';
 
+    /// ---- FUNCTIONS ---- ///
+
     // Remove Image Blur
     function removeBlur() {
-        const images = document.querySelectorAll('.q-box');
+        const images = document.querySelectorAll('.q-box[style*="filter"], .unzoomed');
 
         images.forEach(image => {
-            image.style.filter = 'none'
+            if (window.getComputedStyle(image).getPropertyValue('filter') != 'blur(0px)') {
+                image.style.filter = 'none';
+                image.classList.add('unblured');
+            }
         });
+
+        setSessionSetting('autoUnblur', true);
+    }
+
+    // Blur Images
+    function addBlur() {
+        const images = document.querySelectorAll('.unblured');
+
+        images.forEach(image => {
+            image.style.filter = 'blur(30px)';
+            image.classList.remove('unblured');
+        });
+
+        setSessionSetting('autoUnblur', false);
     }
 
     // Expand Posts
@@ -38,7 +62,7 @@
         const callback = (mutationsList, observer) => {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                    removeBlur();
+                    getSessionSetting('autoUnblur') && removeBlur();
                 }
             }
         };
@@ -49,11 +73,11 @@
             mutationObserver.observe(targetNode, config);
         }
         else if (window.addEventListener) {
-            targetNode.addEventListener('DOMNodeInserted', callback, false)
-            targetNode.addEventListener('DOMNodeRemoved', callback, false)
+            targetNode.addEventListener('DOMNodeInserted', callback, false);
+            targetNode.addEventListener('DOMNodeRemoved', callback, false);
         }
 
-        removeBlur();
+        getSessionSetting('autoUnblur') && removeBlur();
     }
 
     // Get The Main Content Node To Add It Into Observer Watch
@@ -81,15 +105,55 @@
         }
     }
 
+    // Get Global Setting
+    function getGlobalSetting(settingName) {
+        return GM_getValue(settingName, globalDefaults[settingName]);
+    }
+
+    // Set Global Setting
+    function setGlobalSetting(settingName, settingValue) {
+        GM_setValue(settingName, settingValue);
+        // Update Session Setting
+        setSessionSetting(settingName, settingValue);
+    }
+
+    // Get Session Setting
+    function getSessionSetting(settingName) {
+        switch (settingName) {
+            case 'autoUnblur':
+                // Don not auto unblur images if the global setting is false
+                return getGlobalSetting('autoUnblur') ? sessionSettings[settingName] : false;
+            default:
+                return sessionSettings[settingName];
+        }
+    }
+
+    // Set Session Setting
+    function setSessionSetting(settingName, settingValue) {
+        sessionSettings[settingName] = settingValue;
+    }
+
+    /// ---- GLOBAL VARIABLES ---- ///
+
     // Define Mouse Click Event
     const clickEvent = new MouseEvent("click", {
         "bubbles": true,
         "cancelable": false
     });
 
-    // Try To Get Target Node Into Observer Watch
-    getMainContentNode();
-    getMainFeedNode();
+    // Define Global Defaluts
+    const globalDefaults = {
+        autoUnblur: true,
+        autoExpand: false,
+    }
+
+    // Define Session Settings
+    var sessionSettings = {
+        autoUnblur: getGlobalSetting('autoUnblur'),
+        autoExpand: getGlobalSetting('autoExpand'),
+    }
+
+    /// ---- LISTENERS ---- ///
 
     // Listener To Listen To Keypresses Events (Shortcuts to utilities)
     document.addEventListener("keydown", function (zEvent) {
@@ -101,5 +165,15 @@
         if (zEvent.ctrlKey && zEvent.altKey && zEvent.key === "b") {
             removeBlur();
         }
+        // Blur Images
+        if (zEvent.ctrlKey && zEvent.altKey && zEvent.key === "r") {
+            addBlur();
+        }
     });
+
+    /// ---- MAIN SCRIPT ---- ///
+
+    // Try To Get Target Node Into Observer Watch
+    getMainContentNode();
+    getMainFeedNode();
 })();
