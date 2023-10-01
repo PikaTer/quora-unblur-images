@@ -5,7 +5,7 @@
 // @description  Unblur quora images and other utilities
 // @author       PikaTer
 // @match        https://*.quora.com/*
-// @icon         https://raw.githubusercontent.com/PikaTer/quora-unblur-images/main/icon.ico
+// @icon         https://raw.githubusercontent.com/PikaTer/quora-unblur-images/main/favicon.ico
 // @license      MIT
 // @grant GM_setValue
 // @grant GM_getValue
