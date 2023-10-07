@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Quora Unblur Images
 // @namespace    quora-unblur-images
-// @version      0.6.0
+// @version      0.6.1
 // @description  Unblur quora images and other utilities
 // @author       PikaTer
 // @match        https://*.quora.com/*
@@ -244,7 +244,8 @@
         const expandGUIContainerButton = document.getElementById('quora-unblur-images-expand-gui-container-button');
 
         // Expand GUI Container Buttons
-        const hideGUIButtons = getGlobalSetting('hideGUIButtons');
+        const hideGUIButtons = !getGlobalSetting('hideGUIButtons');
+
         const display = hideGUIButtons ? 'none' : 'inline-block';
         const innerHTML = hideGUIButtons ? 'arrow_forward_ios' : 'arrow_back_ios';
         const title = hideGUIButtons ? 'Expand GUI Container' : 'Collapse GUI Container';
@@ -258,7 +259,7 @@
         // Toggle Expand GUI Container Button
         expandGUIContainerButton.innerHTML = innerHTML;
         expandGUIContainerButton.setAttribute('title', title);
-        setGlobalSetting('hideGUIButtons', !hideGUIButtons);
+        setGlobalSetting('hideGUIButtons', hideGUIButtons);
 
         // Hide Settings Panel
         if (hideGUIButtons) toggleSettingsPanel(false);
