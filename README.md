@@ -8,12 +8,15 @@ This script allows you to unblur images on Quora
 ***
 
 # Additional Functionality
-The script also provides a few shortcuts to help you in browsing Quora
+The script also provides a few shortcuts & GUI to help you in browsing Quora
 
 ### Shortcut List
 `ctrl` + `alt` + `e`: Expand posts (including images)  
 `ctrl` + `alt` + `b`: Unblur images (in case the script doesn't work automatically)  
 `ctrl` + `alt` + `r`: Re-blur images
+
+### GUI Controls
+![GUI Controls](https://i.postimg.cc/2yTBFjGS/gui-demo.gifD)
 
 ***
 
@@ -21,10 +24,10 @@ The script also provides a few shortcuts to help you in browsing Quora
 - Features
     - [X] Unblur images automatically
     - [X] Unblur / Re-blur images manually
-    - [ ] Expand posts automatically
+    - [X] Expand posts automatically
     - [X] Expand posts manually
 
 - Graphical User Interface (GUI)
-    - [ ] GUI to blur / unblur images manually
-    - [ ] GUI to expand posts manually
-    - [ ] GUI to change user settings (Preferences)
+    - [X] GUI to blur / unblur images manually
+    - [X] GUI to expand posts manually
+    - [X] GUI to change user settings (Preferences)
