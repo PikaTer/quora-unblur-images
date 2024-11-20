@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Quora Unblur Images
 // @namespace    quora-unblur-images
-// @version      0.6.1
+// @version      0.6.2
 // @description  Unblur quora images and other utilities
 // @author       PikaTer
 // @match        https://*.quora.com/*
@@ -86,28 +86,23 @@
         getSessionSetting('autoExpand') && expandPosts();
     }
 
-    // Get The Main Content Node To Add It Into Observer Watch
+    // Get The Content Node To Add It Into Observer Watch
     function getMainContentNode() {
-        const target = document.getElementById('mainContent');
+        const target = document.getElementById('mainContent'); // Default
+        const quoraSpace1 = document.querySelector('.dom_annotate_multifeed_tribe_top_items'); // Quora Spaces
+        const quoraSpace2 = document.querySelector('.dom_annotate_multifeed_tribe_page');
+        const mobile = document.querySelector('.puppeteer_test_question_main') // Mobile
 
-        if (target) {
-            observeDOM(target);
+        let retries = 0;
+        let timeOut = 1000;
+
+        if (target || quoraSpace1 || quoraSpace2 || mobile) {
+            observeDOM(target || quoraSpace1 || quoraSpace2 || mobile);
         } else {
-            setTimeout(getMainContentNode, 1000);
-        }
-    }
+            retries++
+            if (retries > 30) timeOut = 5000 // Reduce looping frequency after certain number of retries
 
-    // Get The Main Feed Node (Quora Spaces) To Add It Into Observer Watch
-    function getMainFeedNode() {
-        const target = document.querySelector('.dom_annotate_multifeed_tribe_top_items');
-        const target2 = document.querySelector('.dom_annotate_multifeed_tribe_page');
-
-        if (target) {
-            observeDOM(target);
-        } else if (target2) {
-            observeDOM(target2);
-        } else {
-            setTimeout(getMainFeedNode, 5000);
+            setTimeout(getMainContentNode, timeOut);
         }
     }
 
@@ -506,5 +501,4 @@
     // Try To Get Target Node Into Observer Watch
     initGUI();
     getMainContentNode();
-    getMainFeedNode();
 })();
