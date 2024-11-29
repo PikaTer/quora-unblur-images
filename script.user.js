@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Quora Unblur Images
 // @namespace    quora-unblur-images
-// @version      0.6.2
+// @version      0.6.3
 // @description  Unblur quora images and other utilities
 // @author       PikaTer
 // @match        https://*.quora.com/*
+// @exclude      https://*.quora.com/google_/*
 // @icon         https://raw.githubusercontent.com/PikaTer/quora-unblur-images/main/favicon.ico
 // @license      MIT
 // @resource     material_icons https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200
@@ -50,12 +51,13 @@
     // Expand Posts
     function expandPosts() {
         // TODO: Find a better way to form the selector
-        const posts = document.querySelectorAll('.q-click-wrapper.qu-display--block.qu-tapHighlight--none.qu-cursor--pointer:not(.qu-color--gray,[role="listitem"],.expanded)');
-
-        posts.forEach(post => {
+        [...document.querySelectorAll('.q-click-wrapper.qu-display--block.qu-tapHighlight--none.qu-cursor--pointer:not(.qu-color--gray,[role="listitem"],.expanded)')].map(post => {
             post.dispatchEvent(clickEvent);
             post.classList.add('expanded');
         });
+
+        // Mobile version sometimes having to click multiple times to fully expand a post
+        [...document.querySelectorAll('.puppeteer_test_read_more_button')].map(button => button.dispatchEvent(clickEvent))
     }
 
     // Observe the DOM for New Post Loaded
@@ -88,16 +90,24 @@
 
     // Get The Content Node To Add It Into Observer Watch
     function getMainContentNode() {
-        const target = document.getElementById('mainContent'); // Default
-        const quoraSpace1 = document.querySelector('.dom_annotate_multifeed_tribe_top_items'); // Quora Spaces
-        const quoraSpace2 = document.querySelector('.dom_annotate_multifeed_tribe_page');
-        const mobile = document.querySelector('.puppeteer_test_question_main') // Mobile
+        let targetNodes = [];
+
+        targetNodes.push(document.getElementById('mainContent')); // Default
+        targetNodes.push(document.querySelector('.dom_annotate_multifeed_tribe_top_items')); // Quora Spaces
+        targetNodes.push(document.querySelector('.dom_annotate_multifeed_tribe_page')); // Quora Spaces
+        targetNodes.push(document.querySelector('.puppeteer_test_question_main')); // Mobile
+        targetNodes.push(document.querySelector('#root > div > div.q-box > div > div:nth-child(2) > div:nth-child(4) > div')); // Mobile Profile
+        targetNodes.push(document.querySelector('.dom_annotate_multifeed_home')); // Mobile Homepage
 
         let retries = 0;
         let timeOut = 1000;
 
-        if (target || quoraSpace1 || quoraSpace2 || mobile) {
-            observeDOM(target || quoraSpace1 || quoraSpace2 || mobile);
+        let filteredNodes = targetNodes.filter(value => value !== null)
+
+        if (filteredNodes.length > 0) {
+            for (const node of filteredNodes) {
+                observeDOM(node)
+            }
         } else {
             retries++
             if (retries > 30) timeOut = 5000 // Reduce looping frequency after certain number of retries
