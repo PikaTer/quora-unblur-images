@@ -26,8 +26,11 @@ The script also provides a few shortcuts & GUI to help you in browsing Quora
     - [X] Unblur / Re-blur images manually
     - [X] Expand posts automatically
     - [X] Expand posts manually
+    - [ ] Expand comments automatically
+    - [ ] Expand & Collapse comments manually
 
 - Graphical User Interface (GUI)
     - [X] GUI to blur / unblur images manually
     - [X] GUI to expand posts manually
     - [X] GUI to change user settings (Preferences)
+    - [ ] GUI to expand & collapse comments manually
